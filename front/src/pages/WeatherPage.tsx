@@ -1,28 +1,10 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
-import City from '../interfaces/City';
-import {
-  Box,
-  Table,
-  TableContainer,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr,
-  useDisclosure,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  ModalFooter,
-  Button,
-  Input,
-} from '@chakra-ui/react';
-import Forecast from '../components/Forecast';
+import { useDisclosure, Input } from '@chakra-ui/react';
 import Pagination from '../components/Pagination';
+import ModalForecast from '../components/Forecast/ModalForecast';
+import CityList from '../components/CityList';
+import { CityService } from '../services/CityService';
+import City from '../interfaces/City';
 
 function WeatherPage() {
   const [weatherData, setWeatherData] = useState<City[]>([]);
@@ -35,11 +17,11 @@ function WeatherPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/cities');
-        setWeatherData(response.data);
-        setFilteredData(response.data); // Initialise filteredData avec toutes les données
+        const data = await CityService.fetchCities();
+        setWeatherData(data);
+        setFilteredData(data);
       } catch (error) {
-        console.error('Error fetching weather data:', error);
+        console.error('Error fetching cities data:', error);
       }
     };
 
@@ -57,9 +39,7 @@ function WeatherPage() {
     if (searchTermLower.trim() === '') {
       setFilteredData(weatherData);
     } else {
-      const filteredCities = weatherData.filter((city) =>
-        city.name.toLowerCase().includes(searchTermLower)
-      );
+      const filteredCities = CityService.filterCities(weatherData, searchTermLower);
       setFilteredData(filteredCities);
     }
   }, [searchTerm, weatherData]);
@@ -72,12 +52,6 @@ function WeatherPage() {
 
   // Calculez le nombre total de pages
   const pageNumbers = Math.ceil(filteredData.length / itemsPerPage);
-
-  // Créez une liste de numéros de page
-  const pages = [];
-  for (let i = 1; i <= pageNumbers; i++) {
-    pages.push(i);
-  }
 
   // Met à jour l'état currentPage lorsqu'un changement de page est déclenché
   const handlePageChange = (page: number) => {
@@ -94,61 +68,20 @@ function WeatherPage() {
         marginBottom={4}
         maxW={'sm'}
       />
-      <Box borderWidth={1} borderRadius={12} padding={3} minW={'2xl'}>
-        {filteredData && (
-          <TableContainer>
-            <Table variant="simple">
-              <Thead>
-                <Tr>
-                  <Th>Code Insee</Th>
-                  <Th>City</Th>
-                  <Th>Population</Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {currentItems.map((city) => (
-                  <Tr
-                    key={city.id}
-                    onClick={() => handleForecastClick(city.insee)}
-                    _hover={{
-                      background: 'gray.100',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    <Td>{city.insee}</Td>
-                    <Td>{city.name}</Td>
-                    <Td>{city.population}</Td>
-                  </Tr>
-                ))}
-              </Tbody>
-            </Table>
-          </TableContainer>
-        )}
-      </Box>
-
-      {/* Affichez le composant de pagination en bas de votre contenu */}
+      {/* Tableau des données des villes  */}
+      <CityList cities={currentItems} onCityClick={handleForecastClick} />
+      {/* Affichez le composant de pagination */}
       <Pagination
         currentPage={currentPage}
         totalPages={pageNumbers}
         onPageChange={handlePageChange}
       />
-
       {/* Modal pour afficher les détails de la prévision */}
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Prévision</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            {selectedCodeInsee && <Forecast codeInsee={selectedCodeInsee} />}
-          </ModalBody>
-          <ModalFooter>
-            <Button colorScheme="blue" onClick={onClose}>
-              Fermer
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+      <ModalForecast
+        isOpen={isOpen}
+        onClose={onClose}
+        selectedCodeInsee={selectedCodeInsee}
+      />
     </>
   );
 }

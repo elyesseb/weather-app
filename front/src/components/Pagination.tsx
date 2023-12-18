@@ -7,11 +7,7 @@ interface PaginationProps {
   onPageChange: (current: number) => void;
 }
 
-function Pagination({
-  currentPage,
-  totalPages,
-  onPageChange,
-}: PaginationProps) {
+function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) {
   return (
     <Box display="flex" justifyContent="center" mt={4}>
       <Button
@@ -19,6 +15,7 @@ function Pagination({
         isDisabled={currentPage === 1}
         leftIcon={<ChevronLeftIcon />}
       >
+        Previous
       </Button>
       <Box
         mx={2}
@@ -32,6 +29,7 @@ function Pagination({
         isDisabled={currentPage === totalPages}
         rightIcon={<ChevronRightIcon />}
       >
+        Next
       </Button>
     </Box>
   );
