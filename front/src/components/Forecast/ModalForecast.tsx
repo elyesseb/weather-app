@@ -9,17 +9,11 @@ import {
   ModalOverlay,
 } from '@chakra-ui/react';
 import Forecast from './Forecast';
+import ModalForecast from '../../interfaces/ModalForecast';
 
-interface ModalForecastProps {
-  isOpen: boolean;
-  onClose: () => void;
-  selectedCodeInsee: string | null;
-}
-
-function ModalForecast({ isOpen, onClose, selectedCodeInsee }: ModalForecastProps) {
-
+function ModalForecast({ isOpen, onClose, selectedCodeInsee }: ModalForecast) {
   return (
-<>
+    <>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>

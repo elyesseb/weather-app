@@ -9,13 +9,13 @@ interface PaginationProps {
 
 function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) {
   return (
-    <Box display="flex" justifyContent="center" mt={4}>
+    <Box display="flex" justifyContent="center" mt={4} minW={"2xl"}>
       <Button
         onClick={() => onPageChange(currentPage - 1)}
         isDisabled={currentPage === 1}
         leftIcon={<ChevronLeftIcon />}
       >
-        Previous
+        Précédent
       </Button>
       <Box
         mx={2}
@@ -29,7 +29,7 @@ function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) 
         isDisabled={currentPage === totalPages}
         rightIcon={<ChevronRightIcon />}
       >
-        Next
+        Suivant
       </Button>
     </Box>
   );

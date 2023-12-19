@@ -45,7 +45,7 @@ function WeatherPage() {
   }, [searchTerm, weatherData]);
 
   // Calculez l'indice de début et de fin pour les éléments de la page actuelle
-  const itemsPerPage = 8;
+  const itemsPerPage = 6;
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);

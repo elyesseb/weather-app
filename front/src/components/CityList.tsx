@@ -24,7 +24,7 @@ const CityList: React.FC<CityListProps> = ({ cities, onCityClick }) => {
           <Thead>
             <Tr>
               <Th>Code Insee</Th>
-              <Th>City</Th>
+              <Th>Ville</Th>
               <Th>Population</Th>
             </Tr>
           </Thead>
